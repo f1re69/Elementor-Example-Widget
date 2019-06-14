@@ -94,7 +94,26 @@ final class Elementor_Example {
 
 		add_action( 'init', [ $this, 'i18n' ] );
 		add_action( 'plugins_loaded', [ $this, 'init' ] );
+		$this->add_actions();
+	}
 
+	private function add_actions() {
+		add_action( 'elementor/widgets/widgets_registered', [ $this, 'on_widgets_registered' ] );
+	}
+
+	public function on_widgets_registered() {
+		$this->includes();
+		$this->register_widget();
+	}
+
+	private function includes() {
+		require_once( __DIR__ . '/skins/skin-example.php' );
+	}
+
+	private function register_widget() {
+		add_action( 'elementor/widget/posts/skins_init', function( $widget ) {
+			$widget->add_skin( new \ElementorExampleWidget\Skins\Skin_Example( $widget ) );
+		});
 	}
 
 	/**
